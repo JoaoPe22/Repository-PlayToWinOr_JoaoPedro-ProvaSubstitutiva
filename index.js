@@ -3,6 +3,36 @@ const db = require("./db/db");
 
 const Usuario = require("./models/Usuario");
 
+const express = require("express");
+const app = express();
+
+app.use(
+  express.urlencoded({
+    extended: true,
+  })
+);
+app.use(express.json());
+
+app.get("/", (req, res) => {
+  res.redirect("/usuarios/novo");
+});
+
+app.get("/usuarios/novo", (req, res) => {
+  res.sendFile(`${__dirname}/views/new-user.html`);
+});
+
+app.post("/usuarios/novo", async(req, res) => {
+  const dadosUsuarios = {
+    nickname: req.body.nickname,
+    nome: req.body.nome,
+  };
+
+  const usuario = await Usuario.create(dadosUsuarios);
+  res.send("Usuário Inserido:" + usuario.id);
+});
+
+app.listen(3000);
+
 db.sync()
   .then(() => {
     console.log("Sucesso, conectado e sicronizado ao bando de dados !!!");
@@ -10,13 +40,6 @@ db.sync()
   .catch((err) => {
     console.log("Erro identificado: " + err);
   });
-
-
-
-
-
-
-
 
 // db.authenticate()
 //   .then(() => {
