@@ -1,15 +1,30 @@
 require("dotenv").config();
 const db = require("./db/db");
 
-db.authenticate()
+const Usuario = require("./models/Usuario");
+
+db.sync()
   .then(() => {
-    console.log("Sucesso!!!");
+    console.log("Sucesso, conectado e sicronizado ao bando de dados !!!");
   })
   .catch((err) => {
     console.log("Erro identificado: " + err);
   });
 
-  
+
+
+
+
+
+
+
+// db.authenticate()
+//   .then(() => {
+//     console.log("Sucesso!!!");
+//   })
+//   .catch((err) => {
+//     console.log("Erro identificado: " + err);
+//   });
 
 // const { Client } = require("pg");
 // require("dotenv").config();
