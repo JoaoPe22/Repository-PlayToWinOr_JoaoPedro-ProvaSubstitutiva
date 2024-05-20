@@ -1,15 +1,18 @@
 const db = require("../db/db");
 const { DataTypes } = require("sequelize");
 
-const Usuario = db.define("Usuario", {
-  nickname: {
+const Jogos = db.define("Jogo", {
+  titulo: {
     type: DataTypes.STRING,
     required: true,
   },
-  nome: {
+  descricao: {
     type: DataTypes.STRING,
     required: true,
+  },
+  precoBase: {
+    type: DataTypes.DOUBLE,
   },
 });
 
-module.exports = Usuario;
+module.exports = Jogos;
