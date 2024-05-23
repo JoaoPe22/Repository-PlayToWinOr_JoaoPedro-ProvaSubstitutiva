@@ -1,9 +1,17 @@
+// Importações dos módulos
 require("dotenv").config();
 const db = require("./db/db");
-
 const express = require("express");
+const handlebars = require("express-handlebars");
+
+// Instanciação dp servidor
 const app = express();
 
+// Vinculação do Handlebars ao Express
+app.engine("handlebars", handlebars.engine());
+app.set("view engine", "handlebars");
+
+// Configurações no express para facilitar a captura de dados recebidos de formulários
 app.use(
   express.urlencoded({
     extended: true,
@@ -15,7 +23,7 @@ app.use(express.json());
 const Usuario = require("./models/Usuario");
 
 app.get("/usuarios/novo", (req, res) => {
-  res.sendFile(`${__dirname}/views/new-user.html`);
+  res.render("new-user");
 });
 
 app.post("/usuarios/novo", async (req, res) => {
@@ -32,7 +40,7 @@ app.post("/usuarios/novo", async (req, res) => {
 const Jogos = require("./models/Jogos");
 
 app.get("/jogo/novo", (req, res) => {
-  res.sendFile(`${__dirname}/views/formJogo.html`);
+  res.render("formJogo");
 });
 
 app.post("/jogo/novo", async (req, res) => {
