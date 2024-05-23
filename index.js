@@ -19,11 +19,24 @@ app.use(
 );
 app.use(express.json());
 
+// ROTAS
+// HOME
+app.get("/", (req, res) => {
+  res.render("home");
+});
+
 // Usuario
+app.get("/usuarios", async(req, res) => {
+  const usuarios = await Usuario.findAll({ raw: true });
+
+  res.render("usuarios", { usuarios });
+});
+
+// Usuario/novo
 const Usuario = require("./models/Usuario");
 
 app.get("/usuarios/novo", (req, res) => {
-  res.render("new-user");
+  res.render("formUsuarios");
 });
 
 app.post("/usuarios/novo", async (req, res) => {
@@ -57,7 +70,9 @@ app.post("/jogo/novo", async (req, res) => {
   }
 });
 
-app.listen(3000);
+app.listen(3000, () => {
+  console.log("O server está rodando na porta 3000");
+});
 
 db.sync()
   .then(() => {
