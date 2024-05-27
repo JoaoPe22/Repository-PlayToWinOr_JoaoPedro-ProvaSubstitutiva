@@ -61,8 +61,28 @@ app.get("/usuarios/:id/update", async (req, res) => {
   // });
 });
 
+app.post("/usuarios/:id/update", async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const dadosUsuarios = {
+    nickname: req.body.nickname,
+    nome: req.body.nome,
+  };
+
+  const retorno = await Usuario.update(dadosUsuarios, {
+    where: { id: id },
+  });
+
+  if (retorno > 0) {
+    res.redirect("/usuarios");
+  } else {
+    res.send("Erro ao atualizar usuário");
+  }
+});
+
 // Jogo
 const Jogos = require("./models/Jogos");
+const { where } = require("sequelize");
 
 app.get("/jogo/novo", (req, res) => {
   res.render("formJogo");
