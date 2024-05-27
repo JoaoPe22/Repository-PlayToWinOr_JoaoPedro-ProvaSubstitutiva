@@ -1,5 +1,5 @@
 <h1>Ola, ta cadastrado</h1>
-
+<a href="/usuarios/novo">Cadastrar novo usuário</a>
 <table border="1">
     <tr>
         <th>Id</th>
@@ -11,6 +11,9 @@
         <td>{{ this.id }}</td>
         <td>{{ this.nickname }}</td>
         <td>{{ this.nome }}</td>
+        <td>
+            <a href="/usuarios/{{this.id}}/update">Atualizar</a>
+        </td>
     </tr>
     {{/each}}
 </table>

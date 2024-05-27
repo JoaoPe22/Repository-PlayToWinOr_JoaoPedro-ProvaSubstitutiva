@@ -26,7 +26,7 @@ app.get("/", (req, res) => {
 });
 
 // Usuario
-app.get("/usuarios", async(req, res) => {
+app.get("/usuarios", async (req, res) => {
   const usuarios = await Usuario.findAll({ raw: true });
 
   res.render("usuarios", { usuarios });
@@ -47,6 +47,18 @@ app.post("/usuarios/novo", async (req, res) => {
 
   const usuario = await Usuario.create(dadosUsuarios);
   res.send("Usuário Inserido:" + usuario.id);
+});
+
+app.get("/usuarios/:id/update", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, { raw: true });
+
+  res.render("formUsuarios", { usuario });
+  // const id = parseInt(req.params.id);
+  // const usuario = Usuario.findOne({
+  //   where: { id: id },
+  //   raw: true,
+  // });
 });
 
 // Jogo
