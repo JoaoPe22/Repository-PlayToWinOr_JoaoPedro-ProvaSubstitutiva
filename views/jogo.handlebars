@@ -1,0 +1,23 @@
+<h1>Ola, ta cadastrado</h1>
+<a href="/jogo/novo">Cadastrar novo usuario</a>
+<table border="1">
+    <tr>
+        <th>Id</th>
+        <th>Titulo</th>
+        <th>Descrição</th>
+        <th>Preço</th>
+    </tr>
+    {{#each jogo}}
+    <tr>
+        <td> {{ this.id}}</td>
+        <td>{{ this.titulo}}</td>
+        <td>{{ this.descricao}}</td>
+        <td>{{ this.precoBase}}</td>
+        <td><a href="jogo/{{this.id}}/update">Atualizar</a>
+            <form action="/jogo/{{this.id}}/delete" method="post">
+                <input type="submit" value="Excluir" />
+            </form>
+        </td>
+    </tr>
+    {{/each}}
+</table>

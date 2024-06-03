@@ -26,14 +26,13 @@ app.get("/", (req, res) => {
 });
 
 // Usuario
+const Usuario = require("./models/Usuario");
+
 app.get("/usuarios", async (req, res) => {
   const usuarios = await Usuario.findAll({ raw: true });
 
   res.render("usuarios", { usuarios });
 });
-
-// Usuario/novo
-const Usuario = require("./models/Usuario");
 
 app.get("/usuarios/novo", (req, res) => {
   res.render("formUsuarios");
@@ -61,6 +60,7 @@ app.get("/usuarios/:id/update", async (req, res) => {
   // });
 });
 
+// Atualizar
 app.post("/usuarios/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
 
@@ -80,9 +80,26 @@ app.post("/usuarios/:id/update", async (req, res) => {
   }
 });
 
+// Delete
+app.post("/usuarios/:id/delete", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const retorno = await Usuario.destroy({ where: { id: id } });
+
+  if (retorno > 0) {
+    res.redirect("/usuarios");
+  } else {
+    res.send("Erro ao excluir usuário");
+  }
+});
+
 // Jogo
 const Jogos = require("./models/Jogos");
 const { where } = require("sequelize");
+
+app.get("/jogo", async (req, res) => {
+  const jogos = await Jogos.findAll({ raw: true });
+  res.render("jogos", { jogos });
+});
 
 app.get("/jogo/novo", (req, res) => {
   res.render("formJogo");
@@ -94,13 +111,39 @@ app.post("/jogo/novo", async (req, res) => {
     descricao: req.body.descricao,
     precoBase: req.body.precoBase,
   };
-  try {
-    const jogo = await Jogos.create(dadosJogos);
-    res.send("Jogo Inserido:" + jogo.id);
-  } catch (error) {
-    res.status(500).send("Erro ao inserir jogo: " + error.message);
+
+  const jogo = await Jogos.create(dadosJogos);
+  res.send("Jogo Inserido:" + jogo.id);
+});
+
+app.get("jogo/:id/update", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const jogo = await Jogos.findByPk(id, { raw: true });
+
+  res.render("formJogo", { jogo });
+});
+
+// Atualizar
+app.post("/jogo/:id/update", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const dadosJogos = {
+    titulo: req.body.titulo,
+    descricao: req.body.descricao,
+    precoBase: req.body.precoBase,
+  };
+
+  const retorno = await Jogos.update(dadosJogos, {
+    where: { id: id },
+  });
+
+  if (retorno > 0) {
+    res.redirect("/jogo");
+  } else {
+    res.send("Erro ao atualizar jogo");
   }
 });
+
+// Delete
 
 app.listen(3000, () => {
   console.log("O server está rodando na porta 3000");
