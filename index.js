@@ -30,7 +30,6 @@ const Usuario = require("./models/Usuario");
 
 app.get("/usuarios", async (req, res) => {
   const usuarios = await Usuario.findAll({ raw: true });
-
   res.render("usuarios", { usuarios });
 });
 
@@ -51,19 +50,12 @@ app.post("/usuarios/novo", async (req, res) => {
 app.get("/usuarios/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
   const usuario = await Usuario.findByPk(id, { raw: true });
-
   res.render("formUsuarios", { usuario });
-  // const id = parseInt(req.params.id);
-  // const usuario = Usuario.findOne({
-  //   where: { id: id },
-  //   raw: true,
-  // });
 });
 
 // Atualizar
 app.post("/usuarios/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
-
   const dadosUsuarios = {
     nickname: req.body.nickname,
     nome: req.body.nome,
@@ -97,8 +89,8 @@ const Jogos = require("./models/Jogos");
 const { where } = require("sequelize");
 
 app.get("/jogo", async (req, res) => {
-  const jogos = await Jogos.findAll({ raw: true });
-  res.render("jogos", { jogos });
+  const jogo = await Jogos.findAll({ raw: true });
+  res.render("jogo", { jogo });
 });
 
 app.get("/jogo/novo", (req, res) => {
@@ -116,10 +108,9 @@ app.post("/jogo/novo", async (req, res) => {
   res.send("Jogo Inserido:" + jogo.id);
 });
 
-app.get("jogo/:id/update", async (req, res) => {
+app.get("/jogo/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
   const jogo = await Jogos.findByPk(id, { raw: true });
-
   res.render("formJogo", { jogo });
 });
 
@@ -144,7 +135,18 @@ app.post("/jogo/:id/update", async (req, res) => {
 });
 
 // Delete
+app.post("/jogo/:id/delete", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const retorno = await Jogos.destroy({ where: { id: id } });
 
+  if (retorno > 0) {
+    res.redirect("/jogo");
+  } else {
+    res.send("Erro ao excluir jogo");
+  }
+});
+
+// Porta que o servidor está rodando
 app.listen(3000, () => {
   console.log("O server está rodando na porta 3000");
 });
