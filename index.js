@@ -4,6 +4,9 @@ const db = require("./db/db");
 const express = require("express");
 const handlebars = require("express-handlebars");
 
+const Usuario = require("./models/Usuario");
+const Cartao = require("./models/Cartao");
+
 // Instanciação dp servidor
 const app = express();
 
@@ -26,7 +29,7 @@ app.get("/", (req, res) => {
 });
 
 // Usuario
-const Usuario = require("./models/Usuario");
+
 
 app.get("/usuarios", async (req, res) => {
   const usuarios = await Usuario.findAll({ raw: true });
@@ -145,6 +148,21 @@ app.post("/jogo/:id/delete", async (req, res) => {
     res.send("Erro ao excluir jogo");
   }
 });
+
+// Rota Cartões
+// Ver Cartões
+app.get("/usuarios/:id:/cartoes", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, { raw: true });
+
+  res.render("cartoes.handlebars", { usuario });
+});
+
+// Fomulário de cadastro de cartão
+app.get("/usuarios/:id/novoCartao", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const usuario = await Usuario.findByPk(id, { raw: true });
+})
 
 // Porta que o servidor está rodando
 app.listen(3000, () => {
