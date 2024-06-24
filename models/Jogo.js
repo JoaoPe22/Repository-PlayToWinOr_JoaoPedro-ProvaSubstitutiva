@@ -1,7 +1,7 @@
 const db = require("../db/db");
 const { DataTypes } = require("sequelize");
 
-const Jogos = db.define("Jogo", {
+const Jogo = db.define("Jogo", {
   titulo: {
     type: DataTypes.STRING,
     required: true,
@@ -15,4 +15,4 @@ const Jogos = db.define("Jogo", {
   },
 });
 
-module.exports = Jogos;
+module.exports = Jogo;

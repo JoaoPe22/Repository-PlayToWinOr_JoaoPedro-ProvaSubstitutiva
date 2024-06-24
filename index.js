@@ -6,6 +6,10 @@ const handlebars = require("express-handlebars");
 
 const Usuario = require("./models/Usuario");
 const Cartao = require("./models/Cartao");
+const Jogo = require("./models/Jogo");
+
+Jogo.belongsToMany(Usuario, { through: "aquisicoes" });
+Usuario.belongsToMany(Jogo, { through: "aquisicoes" });
 
 // Instanciação dp servidor
 const app = express();
@@ -29,7 +33,6 @@ app.get("/", (req, res) => {
 });
 
 // Usuario
-
 
 app.get("/usuarios", async (req, res) => {
   const usuarios = await Usuario.findAll({ raw: true });
@@ -88,7 +91,7 @@ app.post("/usuarios/:id/delete", async (req, res) => {
 });
 
 // Jogo
-const Jogos = require("./models/Jogos");
+const Jogos = require("./models/Jogo");
 const { where } = require("sequelize");
 
 app.get("/jogo", async (req, res) => {
@@ -151,18 +154,40 @@ app.post("/jogo/:id/delete", async (req, res) => {
 
 // Rota Cartões
 // Ver Cartões
-app.get("/usuarios/:id:/cartoes", async (req, res) => {
+app.get("/usuarios/:id/cartoes", async (req, res) => {
   const id = parseInt(req.params.id);
   const usuario = await Usuario.findByPk(id, { raw: true });
 
-  res.render("cartoes.handlebars", { usuario });
+  const cartoes = await Cartao.findAll({
+    raw: true,
+    where: { UsuarioId: id },
+  });
+  res.render("cartoes.handlebars", { usuario, cartoes });
 });
 
 // Fomulário de cadastro de cartão
 app.get("/usuarios/:id/novoCartao", async (req, res) => {
   const id = parseInt(req.params.id);
   const usuario = await Usuario.findByPk(id, { raw: true });
-})
+
+  res.render("formCartao", { usuario });
+});
+
+// Cadastro de cartão
+app.post("/usuarios/:id/novoCartao", async (req, res) => {
+  const id = parseInt(req.params.id);
+
+  const dadosCartao = {
+    numero: req.body.numero,
+    nome: req.body.nome,
+    codSeguranca: req.body.codSeguranca,
+    UsuarioId: id,
+  };
+
+  await Cartao.create(dadosCartao);
+
+  res.redirect(`/usuarios/${id}/cartoes`);
+});
 
 // Porta que o servidor está rodando
 app.listen(3000, () => {

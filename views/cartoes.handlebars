@@ -1,23 +1,16 @@
 <h1>Ola, ta cadastrado</h1>
-<a href="/usuarios/novo">Cadastrar novo cartão</a>
-{{!-- <table border="1">
+<a href="/usuarios/{{usuario.id}}/novoCartao">Cadastrar novo cartão</a>
+
+<table border="1">
     <tr>
-        <th>Id</th>
-        <th>Nickname</th>
+        <th>Número</th>
         <th>Nome</th>
     </tr>
-    {{#each usuarios}}
+    {{#each cartoes}}
     <tr>
-        <td>{{ this.id }}</td>
-        <td>{{ this.nickname }}</td>
+        <td>{{ this.numero }}</td>
         <td>{{ this.nome }}</td>
-        <td>
-            <a href="/usuarios/{{this.id}}/update">Atualizar</a>
-            <form action="/usuarios/{{this.id}}/delete" method="post">
-                <input type="submit" value="Excluir" />
-            </form>
-            <a href=""></a>
-        </td>
+
     </tr>
     {{/each}}
-</table> --}}
+</table>
