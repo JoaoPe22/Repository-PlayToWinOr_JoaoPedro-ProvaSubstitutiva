@@ -6,14 +6,14 @@
         <th>Titulo</th>
         <th>Descrição</th>
     </tr>
-    {{#each conquista}}
+    {{#each conquistas}}
     <tr>
         <td>{{this.titulo}}</td>
         <td>{{this.descricao}}</td>
         <td>
             <a href="/jogo/{{../jogo.id}}/conquista/{{this.id/update}}">Atualizar</a>
             <form action="/jogo/{{../jogo.id}}/conquista/{{this.id}}/delete" method="post">
-                <input type="submit" value="Excluir" />
+                <input type="submit" value="Excluir" /> 
             </form>
         </td>
     </tr>
