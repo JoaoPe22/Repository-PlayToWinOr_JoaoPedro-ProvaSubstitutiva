@@ -7,9 +7,13 @@ const handlebars = require("express-handlebars");
 const Usuario = require("./models/Usuario");
 const Cartao = require("./models/Cartao");
 const Jogo = require("./models/Jogo");
+const Conquista = require("./models/Conquista");
 
 Jogo.belongsToMany(Usuario, { through: "aquisicoes" });
 Usuario.belongsToMany(Jogo, { through: "aquisicoes" });
+
+Jogo.hasMany(Conquista, { foreignKey: 'JogoId'})
+Conquista.belongsTo(Jogo, { foreignKey: 'JogoId'})
 
 // Instanciação dp servidor
 const app = express();
@@ -188,6 +192,72 @@ app.post("/usuarios/:id/novoCartao", async (req, res) => {
 
   res.redirect(`/usuarios/${id}/cartoes`);
 });
+
+// Conquista
+app.get("/jogo/:jogoId/conquistas", async (req, res) => {
+  const jogoId = parseInt(req.params.jogoId);
+  const conquistas = await Conquista.findAll({
+    where: { JogoId: jogoId },
+    raw: true,
+  });
+  const jogo = await Jogo.findByPk(jogoId, { raw: true });
+  res.render("conquistas", { conquistas, jogo });
+});
+
+app.get("/jogo/:jogoId/conquista/nova", (req, res) => {
+  const jogoId = parseInt(req.params.jogoId);
+  res.render("formConquista", { jogoId });
+});
+
+app.post("/jogo/:jogoId/conquista/nova", async (req, res) => {
+  const jogoId = parseInt(req.params.jogoId);
+  const dadosConquista = {
+    titulo: req.body.titulo,
+    descricao: req.body.descricao,
+    JogoId: jogoId,
+  };
+
+  const conquista = await Conquista.create(dadosConquista);
+  res.send("Consquista Inserida: " + conquista.id);
+});
+
+// Atualizar
+app.get("/jogo/:jogoId/conquista/:id/update", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const conquista = await Conquista.findByPk(id, { raw: true });
+  res.render("formConquista", { conquista });
+});
+
+app.post("/jogo/:jogoId/conquista/:id/update", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const dadosConquista = {
+    titulo: req.body.titulo,
+    descricao: req.body.descricao,
+  };
+
+  const retorno = await Conquista.update(dadosConquista, {
+    where: { id: id },
+  });
+
+  if (retorno > 0) {
+    res.redirect(`/jogo/${req.params.jogoId}/conquistas`);
+  } else {
+    res.send("Erro ao atualizar conquista");
+  }
+});
+
+// Delete
+app.post("/jogo/:jogoId/conquista/:id/delete", async (req, res) => {
+  const id = parseInt(req.params.id);
+  const retorno = await Conquista.destroy({ where: { id: id } });
+
+  if (retorno > 0) {
+    res.redirect(`/jogo/${req.params.jogoId}/conquistas`);
+  } else {
+    res.send("Erro ao excluir conquista");
+  }
+});
+
 
 // Porta que o servidor está rodando
 app.listen(3000, () => {
