@@ -1,10 +1,10 @@
 {{#if conquista}}
-<h1>Atualizar Conquista</h1>
+<h1>Atualizar Conquista de {{jogo.titulo}}</h1>
 <form action="/jogo/{{jogoId}}/conquista/{{conquista.id}}/update" method="post">
 
     {{else}}
-    <h1>Cadastrar Conquista</h1>
-    <form action="/jogo/{{jogoId}}/conquista/novo" method="post">
+    <h1>Cadastrar Conquista de {{jogo.titulo}}</h1>
+    <form action="/jogo/{{jogo.id}}/conquista/novo" method="post">
         {{/if}}
 
         <div>

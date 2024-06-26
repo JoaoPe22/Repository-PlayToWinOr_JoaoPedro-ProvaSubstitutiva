@@ -247,12 +247,13 @@ app.post("/jogo/:jogoId/conquista/:id/update", async (req, res) => {
 });
 
 // Delete
-app.post("/jogo/conquista/:id/delete", async (req, res) => {
+app.post("/jogo/:jogoId/conquista/:id/delete", async (req, res) => {
   const id = parseInt(req.params.id);
+  const jogoId = parseInt(req.params.jogoId)
   const retorno = await Conquista.destroy({ where: { id: id } });
 
   if (retorno > 0) {
-    res.redirect(`/jogo/${req.params.jogoId}/conquista`);
+    res.redirect(`/jogo/${jogoId}/conquista`);
   } else {
     res.send("Erro ao excluir conquista");
   }
