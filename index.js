@@ -34,7 +34,6 @@ app.get("/", (req, res) => {
 });
 
 // Usuario
-
 app.get("/usuarios", async (req, res) => {
   const usuarios = await Usuario.findAll({ raw: true });
   res.render("usuarios", { usuarios });
@@ -54,13 +53,13 @@ app.post("/usuarios/novo", async (req, res) => {
   res.send("Usuário Inserido:" + usuario.id);
 });
 
+// Atualizar
 app.get("/usuarios/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
   const usuario = await Usuario.findByPk(id, { raw: true });
   res.render("formUsuarios", { usuario });
 });
 
-// Atualizar
 app.post("/usuarios/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
   const dadosUsuarios = {
@@ -195,21 +194,20 @@ app.get("/jogo/:id/conquista", async (req, res) => {
   const id = parseInt(req.params.id);
   const jogo = await Jogo.findByPk(id, { raw: true });
 
-  const conquistas = await Conquista.findAll({
+  const conquista = await Conquista.findAll({
     raw: true,
-    where: { JogoId:id }
+    where: { JogoId: id },
   });
-  res.render("conquista.handlebars", { jogo, conquistas });
+  res.render("conquista", { jogo, conquista });
 });
 
-
-app.get("/jogo/:id/conquista/novaConquista", async(req, res) => {
+app.get("/jogo/:id/conquista/novo", async (req, res) => {
   const id = parseInt(req.params.id);
-  const jogo = await Jogo.findByPk(id, { raw: true})
+  const jogo = await Jogo.findByPk(id, { raw: true });
   res.render("formConquista", { jogo });
 });
 
-app.post("/jogo/:id/conquista/novaConquista", async (req, res) => {
+app.post("/jogo/:id/conquista/novo", async (req, res) => {
   const id = parseInt(req.params.id);
   const dadosConquista = {
     titulo: req.body.titulo,
@@ -218,29 +216,31 @@ app.post("/jogo/:id/conquista/novaConquista", async (req, res) => {
   };
 
   await Conquista.create(dadosConquista);
-  res.redirect(`/jogo/${id}/conquista`)
+  res.redirect(`/jogo/${id}/conquista`);
 });
 
 // Atualizar
-app.get("/jogo/:id/conquista/update", async (req, res) => {
+app.get("/jogo/:jogoId/conquista/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
+  const jogoId = parseInt(req.params.jogoId)
   const conquista = await Conquista.findByPk(id, { raw: true });
-  res.render("formConquista", { conquista });
+  res.render("formConquista", { conquista, jogoId });
 });
 
-app.post("/jogo/:id/conquista/update", async (req, res) => {
+app.post("/jogo/:jogoId/conquista/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
+  const jogoId = parseInt(req.params.jogoId)
   const dadosConquista = {
     titulo: req.body.titulo,
     descricao: req.body.descricao,
-    id:id,
   };
 
-  await Conquista.create(dadosConquista)
-res.redirect(`/jogo/${id}/conquista`)
+  const retorno = await Conquista.update(dadosConquista, {
+    where: { id: id },
+  });
 
   if (retorno > 0) {
-    res.redirect(`/jogo/${req.params.jogoId}/conquista`);
+    res.redirect(`/jogo/${jogoId}/conquista`);
   } else {
     res.send("Erro ao atualizar conquista");
   }
