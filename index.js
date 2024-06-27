@@ -114,13 +114,14 @@ app.post("/jogo/novo", async (req, res) => {
   res.send("Jogo Inserido:" + jogo.id);
 });
 
+
+// Atualizar
 app.get("/jogo/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
   const jogo = await Jogos.findByPk(id, { raw: true });
   res.render("formJogo", { jogo });
 });
 
-// Atualizar
 app.post("/jogo/:id/update", async (req, res) => {
   const id = parseInt(req.params.id);
   const dadosJogos = {
